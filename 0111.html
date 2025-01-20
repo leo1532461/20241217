@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1A2B 猜數字</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input {
+      font-size: 16px;
+      padding: 8px;
+      width: 200px;
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>1A2B 猜數字</h1>
+  <button id="startBtn">開始</button>
+  <button id="resetBtn" disabled>重新開始</button>
+  <button id="revealBtn" disabled>答案</button>
+  <br><br>
+  <input type="text" id="guessInput" placeholder="請輸入不重複的四個數字" disabled />
+  <button id="guessBtn" disabled>猜</button>
+  <div class="result" id="result"></div>
+  <script>
+  let answer = ""; 
+let gameStarted = false;
+
+
+function generateAnswer() {
+  const digits = [];
+  while (digits.length < 4) {
+    const randomDigit = Math.floor(Math.random() * 10);
+    if (!digits.includes(randomDigit)) {
+      digits.push(randomDigit);
+    }
+  }
+  return digits.join("");
+}
+
+
+function isValidGuess(input) {
+  if (input.length !== 4 || isNaN(input)) return false;
+  const set = new Set(input);
+  return set.size === 4;
+}
+
+
+function calculateAB(guess, answer) {
+  let A = 0;
+  let B = 0;
+  for (let i = 0; i < guess.length; i++) {
+    if (guess[i] === answer[i]) {
+      A++;
+    } else if (answer.includes(guess[i])) {
+      B++;
+    }
+  }
+  return `${A}A${B}B`;
+}
+
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  answer = generateAnswer();
+  gameStarted = true;
+  document.getElementById("result").textContent = "";
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = false;
+  document.getElementById("guessBtn").disabled = false;
+  document.getElementById("resetBtn").disabled = false;
+  document.getElementById("revealBtn").disabled = false;
+  alert("遊戲已開始");
+});
+
+document.getElementById("guessBtn").addEventListener("click", () => {
+  const guess = document.getElementById("guessInput").value;
+  if (!isValidGuess(guess)) {
+    alert("請輸入不重複的四個數字！");
+    return;
+  }
+  const result = calculateAB(guess, answer);
+  document.getElementById("result").textContent = `結果: ${result}`;
+  if (result === "4A0B") {
+    alert("恭喜答對了！");
+    document.getElementById("guessInput").disabled = true;
+    document.getElementById("guessBtn").disabled = true;
+  }
+});
+
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  answer = "";
+  gameStarted = false;
+  document.getElementById("result").textContent = "";
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = true;
+  document.getElementById("guessBtn").disabled = true;
+  document.getElementById("resetBtn").disabled = true;
+  document.getElementById("revealBtn").disabled = true;
+  alert("遊戲已重置，請重新開始");
+});
+
+
+document.getElementById("revealBtn").addEventListener("click", () => {
+  alert(`正確答案是: ${answer}`);
+});
+
+
+  </script>
+</body>
+</html>

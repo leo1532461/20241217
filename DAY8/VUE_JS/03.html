@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Counter Example</title>
+</head>
+<body>
+    <div id="app">
+        <button v-on:click="clearBtn">-</button>
+        <span>{{ count }}</span>
+        <button v-on:click="clickBtn">+</button>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    count: 0, // 初始化点击计数
+                };
+            },
+            methods: {
+                clickBtn() {
+                    this.count++; // 每次点击增加计数
+                    console.log(this.count);
+                },
+                clearBtn() {
+                    // 如果 count 大于 0，才允许减
+                    if (this.count > 0) {
+                        this.count--;
+                        console.log(this.count);
+                    } 
+                },
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>

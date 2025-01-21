@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Example</title>
+</head>
+<body>
+    <div id="app">
+        <h2>V-if</h2>
+        <p v-if="isActive">你看的到我!</p>
+        <p v-else>你應該看不到</p>
+        
+        <button @click="toggle" class="btn btn-primary">切換顯示 (isActive: {{ isActive }})</button>
+        
+        <template v-if="isActive">
+            <p>你看的到我 (使用 template)</p>
+            <p>你看的到我 (使用 template)</p>
+            <p>你看的到我 (使用 template)</p>
+        </template>
+
+        <hr>
+
+        <div v-if="type === 0">現在 TYPE 是 0</div>
+        <div v-else-if="type === 1">現在 TYPE 是 1</div>
+        <div v-else>現在 TYPE 不是 0 或 1</div>
+        <button @click="changeType" class="btn btn-secondary">更換 TYPE</button>
+
+        <hr>
+
+        <h2>V-show</h2>
+        <p v-show="isActive">你看到我 (V-show)</p>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    isActive: true,
+                    type: 0,
+                };
+            },
+            methods: {
+                toggle() {
+                    this.isActive = !this.isActive; // 切换 isActive 的值
+                },
+                changeType() {
+                    this.type = (this.type + 1) % 3; // TYPE 循环 0, 1, 2
+                },
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>

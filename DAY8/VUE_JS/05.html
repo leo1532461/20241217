@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Vue Score Example</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div id="app">
+        <div>姓名: {{ person.name }}</div>
+        <div>分數: {{ person.score }}</div>
+        <div>通過狀況: {{ showR() }}</div>
+        <!-- <div>通過狀況: {{ stateR }}</div> -->
+
+        <button @click="addScore" class="btn btn-outline-primary">加十分</button>
+        <button @click="reduceScore" :class="minusBtn">減十分</button>
+        <button @click="resetScore"      :class="resetBtnObj">RESET</button>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    person: {
+                        name: "Andy",
+                        score: 60,
+                    },
+                    minusBtn : {
+                        btn:true,
+                        "btn-outline-primary":true,
+                    },
+                };
+            },
+            methods: {
+                showR() {
+                    return this.person.score >= 60 ? "通過" : "GG"; // 使用 this 访问 person
+                },
+                addScore() {
+                    this.person.score += 10; // 加分
+                },
+                reduceScore() {
+                    if (this.person.score > 0) {
+                        this.person.score -= 10; // 减分
+                    }
+                },
+                resetScore() {
+                    this.person.score = 60; // 重置分数
+                },
+            },
+
+            // computed:{
+            //     stateR(){
+            //         return this.person.score >= 60 ? "通過" : "GG"; 
+            //     }
+            // 
+            computed:{
+                resetBtnObj(){
+                    return{
+                        disabled:this.person.score>0
+                    }
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+</html>

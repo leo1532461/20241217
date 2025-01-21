@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h1>{{title}}</h1>
+        <p>{{count}}</p>
+          {{message}}
+          <div v-html="tempSpan"></div>
+    </div>
+
+    <div id="app2">
+        <h2>{{title}}</h2>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+  const {createApp} = Vue;
+
+  const app = createApp({
+    data:function(){
+        return{
+            message:"Hi,VUE!",
+            title:"my title",
+            count:10,
+            tempSpan:`<span style="color:red;">span文字</span>`
+        }
+    }
+  });
+
+  app.mount("#app");
+
+  const app2 = createApp({
+    data(){
+        return {
+            title:"app2",
+        };
+    },
+  });
+  app2.mount("#app2");
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Component Example</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 使用自定义组件 -->
+        <h2>使用組件</h2>
+        <Counter></Counter>
+       
+        <hr>
+        <h2>傳遞 PROPS 組件</h2>
+        <prop-counter init-count="10"></prop-counter>
+
+        <hr>
+        <h2>監聽事件 (Emits) 結果顯示在主組件內</h2>
+        <emit-counter @update-count="updateTotal"></emit-counter>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        // 定义 EmitCounter 组件（触发事件）
+        const EmitCounter = {
+            data() {
+                return {
+                    count: 0, // 计数器数据
+                };
+            },
+            methods: {
+                increment() {
+                    this.count++;
+                    this.$emit("updatecount", this.count); // 触发事件，传递当前计数值
+                },
+            },
+            template: `
+                <div>
+                    <button @click="increment">
+                        按了 {{ count }} 次
+                    </button>
+                </div>
+            `,
+        };
+
+        // 定义 Counter 组件（基础组件，不接收 props）
+        const Counter = {
+            data() {
+                return {
+                    count: 0, // 计数器数据
+                };
+            },
+            template: `
+                <div>
+                    <button @click="count++">
+                        按了 {{ count }} 次
+                    </button>
+                </div>
+            `,
+        };
+
+        // 定义 PropCounter 组件（接收 props）
+        const PropCounter = {
+            props: ["initCount"], // 接收传入的 initCount 属性
+            data() {
+                return {
+                    count: Number(this.initCount), // 使用 props 初始化计数器
+                };
+            },
+            template: `
+                <div>
+                    <button @click="count++">
+                        初始值 {{ initCount }}，按了 {{ count }} 次
+                    </button>
+                </div>
+            `,
+        };
+
+        // 创建 Vue 应用
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    total: 0, // 用于接收 EmitCounter 组件传递的值
+                };
+            },
+            methods: {
+                updateTotal(newCount) {
+                    this.total = newCount; // 更新总数
+                },
+            },
+            components: {
+                Counter,      // 注册基础组件
+                PropCounter,  // 注册带 props 的组件
+                EmitCounter,  // 注册 Emit 事件的组件
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>

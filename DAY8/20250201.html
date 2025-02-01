@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動態月曆</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap">
+    <style>
+        /* 全局样式 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #E0E0E0;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        .wrapper {
+            width: 350px;
+            background-color: #707070;
+            border-radius: 16px;
+            padding: 20px;
+            color: #fff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .current-year {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .current-month {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 10px 0;
+        }
+
+        .icons span {
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .icons span:hover {
+            color: #BDBDBD;
+        }
+
+        .calendar {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .weeks {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+
+        .weeks li {
+            font-weight: 500;
+            color: #BDBDBD;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            justify-items: center;
+            margin-top: 10px;
+        }
+
+        .days li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .days li.inactive {
+            color: #9E9E9E;
+        }
+
+        .days li.active {
+            background-color: #1976D2;
+            color: #fff;
+        }
+
+        .days li:hover {
+            background-color: #BDBDBD;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <span id="prev">◀</span>
+            <p class="current-year"></p>
+            <span id="next">▶</span>
+        </header>
+        <p class="current-month"></p>
+        <div class="calendar">
+            <ul class="weeks">
+                <li>日</li>
+                <li>一</li>
+                <li>二</li>
+                <li>三</li>
+                <li>四</li>
+                <li>五</li>
+                <li>六</li>
+            </ul>
+            <ul class="days"></ul>
+        </div>
+    </div>
+
+    <script>
+        const daysTag = document.querySelector(".days"),
+            currentYearTag = document.querySelector(".current-year"),
+            currentMonthTag = document.querySelector(".current-month"),
+            prevNextIcon = document.querySelectorAll("#prev, #next");
+
+        let date = new Date(),
+            currYear = date.getFullYear(),
+            currMonth = date.getMonth();
+
+        const months = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", 
+                        "八月", "九月", "十月", "十一月", "十二月"];
+
+        const renderCalendar = () => {
+            let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay(),
+                lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate(),
+                lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay(),
+                lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
+
+            let liTag = "";
+
+            // 填充上个月的日期
+            for (let i = firstDayOfMonth; i > 0; i--) {
+                liTag += `<li class="inactive">${lastDateOfLastMonth - i + 1}</li>`;
+            }
+
+            // 填充本月日期
+            for (let i = 1; i <= lastDateOfMonth; i++) {
+                let isToday = i === date.getDate() && currMonth === new Date().getMonth() 
+                              && currYear === new Date().getFullYear() ? "active" : "";
+                liTag += `<li class="${isToday}">${i}</li>`;
+            }
+
+            // 填充下个月的日期
+            for (let i = lastDayOfMonth; i < 6; i++) {
+                liTag += `<li class="inactive">${i - lastDayOfMonth + 1}</li>`;
+            }
+
+            currentYearTag.innerText = currYear;
+            currentMonthTag.innerText = months[currMonth];
+            daysTag.innerHTML = liTag;
+        };
+
+        renderCalendar();
+
+        prevNextIcon.forEach(icon => {
+            icon.addEventListener("click", () => {
+                currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+                if (currMonth < 0 || currMonth > 11) {
+                    date = new Date(currYear, currMonth, date.getDate());
+                    currYear = date.getFullYear();
+                    currMonth = date.getMonth();
+                } else {
+                    date = new Date();
+                }
+                renderCalendar();
+            });
+        });
+    </script>
+</body>
+</html>
